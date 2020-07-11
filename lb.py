@@ -7,147 +7,192 @@ import matplotlib.pyplot as plt
 
 class Node :
 
-    def __init__(self, name, time, next) :
+	def __init__(self, name, time, next) :
 
-        self.name = name
-        self.time = time
-        self.next = next
 
+		self.name = name
+		self.time = time
+		self.next = next
+
+		
+
+	def split(self, n) :
         
+		nodes = list()
 
-    def split(self, n) :
-        
-        nodes = list()
-
-        for i in range(n) :
+		for i in range(n) :
             
-            nodes.append(Node(self.name, self.time/n, self.next if i == n - 1 else True))
+			nodes.append(Node(self.name, self.time/n, self.next if i == n - 1 else True))
 
-        return nodes
+		return nodes
 
-    def __add__(self, other) :
+	def __add__(self, other) :
 
-        return Node(self.name + ' ' + other.name if other.name not in self.name else self.name, self.time + other.time, other.next)
+		return Node(self.name + ' ' + other.name if other.name not in self.name else self.name, self.time + other.time, other.next)
 
+	
 
 class Line :
 
-    def __init__(self, nodes, n) :
+	def __init__(self, nodes, n) :
 
-        self.nodes = nodes
+		self.nodes = nodes
 
-        self.n = n
+		self.n = n
 
-    def setup(self) :
+	def setup(self) :
 
-        while len(self.nodes) > self.n :
+		while len(self.nodes) > self.n :
 
-            self.merge()
+			self.merge()
 
-        while len(self.nodes) < self.n : 
+		while len(self.nodes) < self.n : 
 
-            self.split()
+			self.split()
 
 
-    def leadTime(self) :
+	def leadTime(self) :
         # lead time based on the provided nodes (never changes during splits/merges)
 
-        lt = 0
+		lt = 0
 
-        for node in self.nodes :
+		for node in self.nodes :
 
-            lt += node.time
+			lt += node.time
 
-        return lt
+		return lt
 
-    def mean(self) :
+	def mean(self) :
 
-        return self.leadTime() / len(self.nodes)
-
-
-    def standardDeviation(self) :
-
-        squareDifferenceSum = 0
-
-        for node in self.nodes :
-
-            squareDifferenceSum += math.pow(node.time - self.mean(), 2)
-
-        return math.sqrt(squareDifferenceSum / len(self.nodes))
+		return self.leadTime() / len(self.nodes)
 
 
+	def standardDeviation(self) :
 
-    def split(self) :
+		squareDifferenceSum = 0
 
-        maxI = 0
+		for node in self.nodes :
 
-        for i, node in enumerate(self.nodes) :
+			squareDifferenceSum += math.pow(node.time - self.mean(), 2)
+
+		return math.sqrt(squareDifferenceSum / len(self.nodes))
+
+
+
+	def split(self) :
+
+		maxI = 0
+
+		for i, node in enumerate(self.nodes) :
             
-            if node.time > self.nodes[maxI].time :
+			if node.time > self.nodes[maxI].time :
 
-                maxI = i
+				maxI = i
 
-        maxNode = self.nodes[maxI]
+		maxNode = self.nodes[maxI]
 
-        self.nodes.pop(maxI)
+		self.nodes.pop(maxI)
 
-        splitNodes = maxNode.split(2)
+		splitNodes = maxNode.split(2)
 
-        for i, node in enumerate(splitNodes) :
+		for i, node in enumerate(splitNodes) :
 
-            self.nodes.insert(maxI + i, node)
-
-
-    def merge(self) :
-
-        minI = 0
-
-        for i in range(len(self.nodes) - 1) :
-
-            if (self.nodes[i].time + self.nodes[i + 1].time < self.nodes[minI].time + self.nodes[minI + 1].time) and self.nodes[i].next == True  :
-
-                minI = i
-
-        mergedNode = self.nodes[minI] + self.nodes[minI + 1]
-
-        self.nodes.pop(minI)
-        self.nodes.pop(minI)
-
-        self.nodes.insert(minI, mergedNode)
+			self.nodes.insert(maxI + i, node)
 
 
-    def balance(self, limit) :
+	def merge(self) :
 
-        for i in range(0, limit) :
+		minI = 0
 
-            self.merge()
-            self.split()
+		for i in range(len(self.nodes) - 1) :
 
-            
+			if (self.nodes[i].time + self.nodes[i + 1].time < self.nodes[minI].time + self.nodes[minI + 1].time) and self.nodes[i].next == True  :
 
-        
-        
+				minI = i
 
-    def __str__(self) :
+		mergedNode = self.nodes[minI] + self.nodes[minI + 1]
+
+		self.nodes.pop(minI)
+		self.nodes.pop(minI)
+
+		self.nodes.insert(minI, mergedNode)
 
 
-        output = str()
-        '''
-        for node in self.nodes :
+	def balance(self) :
 
-            output += node.name + ' ' + str(node.time) + '\n'
+		
 
-        output += '\n'
-        
-        '''
-        output += str(len(self.nodes)) + " Standard Deviation : " + str(self.standardDeviation()) + '\n'
+		
+		
+		lastSD = self.standardDeviation()
+		currentSD = lastSD - 1
 
-        return output
+		while currentSD < lastSD :
+			
+			lastSD = self.standardDeviation()
+
+			self.merge()
+			self.split()
+			
+			
+			currentSD = self.standardDeviation()
+
+			
+
+
+
+		
+	
+
+	def __str__(self) :
+
+
+
+		output = str()
+
+
+		     
+		for node in self.nodes :
+
+			output += node.name + ' ' + str(node.time) + '\n'
+
+			
+
+		output += str(len(self.nodes)) + " operators running " + str(self.seatsPerHour()) + " seats an hour at " + str(self.efficiency()) + "% efficiency\n"
+		output += "Standard Deviation : " + str(self.standardDeviation()) + '\n'
+
+		output += "----------------------------------------------\n"
+
+		return output
+
+
+	def seatsPerHour(self) :
+
+		maxTime = self.nodes[0].time
+
+		for node in self.nodes :
+
+			if node.time > maxTime :
+
+				maxTime = node.time
+
+		return round(3600 // maxTime)
+
+
+
+	def efficiency(self) :
+
+		optimalSeatsPerHour = 3600 / (self.leadTime() / self.n)
+
+		return round((self.seatsPerHour() / optimalSeatsPerHour) * 100)
+
 
 x = list()
 y = list()
 
-for i in range(5, 25) :
+lines = list()
+
+for i in range(5, 20) :
 
     
     nodes = list()
@@ -168,38 +213,40 @@ for i in range(5, 25) :
     nodes.append(Node("PACKING 1", 95, True))
     nodes.append(Node("PACKING 2", 69, True))
     nodes.append(Node("PACKING 3", 45, None))
-    
+    '''
+
     
     #186530
     nodes.append(Node("SWITCH/LABELS", 43, True))
     nodes.append(Node("LOAD FRAMES", 23, False))
     nodes.append(Node("BACK FOAM", 24, True))
-    nodes.append(Node("CUSHION FOAM", 24, False))
-    nodes.append(Node("BACK COVER", 95, True))
+    nodes.append(Node("BACK COVER", 95, False))
+    nodes.append(Node("CUSHION FOAM", 24, True))
     nodes.append(Node("CUSHION COVER", 69, False))
+    nodes.append(Node("LEFT ARM", 27, True))
     nodes.append(Node("RIGHT ARM", 27, True))
-    nodes.append(Node("LEFT ARM", 27, False))
     nodes.append(Node("TESTER", 42, False))
     nodes.append(Node("PACKAGING 1", 87, True))
     nodes.append(Node("PACKAGING 2", 40, None))
-    '''
+    
 
     '''
     #186984
     nodes.append(Node("TRACKS/LABELS", 86, True))
     nodes.append(Node("SWITCH/LOAD", 67, False))
     nodes.append(Node("BACK FOAM", 37, True))
-    nodes.append(Node("CUSHION FOAM", 41, False))
-    nodes.append(Node("BACK COVER", 81, True))
+    nodes.append(Node("BACK COVER", 81, False))
+    nodes.append(Node("CUSHION FOAM", 41, True))
     nodes.append(Node("CUSHION COVER", 55, False))
+    nodes.append(Node("LEFT ARM", 29, True))
     nodes.append(Node("RIGHT ARM", 27, True))
-    nodes.append(Node("LEFT ARM", 29, False))
     nodes.append(Node("TESTER", 84, False))
     nodes.append(Node("PACKAGING 1", 56, True))
     nodes.append(Node("PACKAGING 2", 61, True))
     nodes.append(Node("PACKAGING 3", 139, None))
     '''
 
+    '''
     #186755
     nodes.append(Node("BELLOWS", 98, True))
     nodes.append(Node("TRACKS", 68, True))
@@ -218,7 +265,7 @@ for i in range(5, 25) :
     nodes.append(Node("PACKAGING 1", 38, True))
     nodes.append(Node("PACKAGING 2", 26, True))
     nodes.append(Node("PACKAGING 3", 35, None))
-
+	'''
 
 
 
@@ -226,12 +273,24 @@ for i in range(5, 25) :
 
     line.setup()
 
-    line.balance(100)
+
+    line.balance()
+    
+    
 
     x.append(i)
-    y.append(line.standardDeviation())
+    y.append(line.seatsPerHour())
 
     print(line, end = "")
+
+    lines.append(line)
+
+
+lines.sort(key = lambda line: line.efficiency(), reverse = True)
+
+for line in lines :
+
+	print("%d people running %d seats an hour at %d percent efficiency" % (line.n, line.seatsPerHour(), line.efficiency()))
 
 plt.plot(x, y)
 plt.show()
