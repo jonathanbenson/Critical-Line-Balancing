@@ -7,12 +7,10 @@ import matplotlib.pyplot as plt
 
 class Node :
 
-	def __init__(self, name, time, next) :
-
-
+	def __init__(self, name, time, nxt) :
 		self.name = name
 		self.time = time
-		self.next = next
+		self.next = nxt
 
 		
 
@@ -34,6 +32,8 @@ class Node :
 
 class Line :
 
+	
+
 	def __init__(self, nodes, n) :
 
 		self.nodes = nodes
@@ -49,6 +49,8 @@ class Line :
 		while len(self.nodes) < self.n : 
 
 			self.split()
+
+	
 
 
 	def leadTime(self) :
@@ -78,7 +80,6 @@ class Line :
 		return math.sqrt(squareDifferenceSum / len(self.nodes))
 
 
-
 	def split(self) :
 
 		maxI = 0
@@ -90,6 +91,8 @@ class Line :
 				maxI = i
 
 		maxNode = self.nodes[maxI]
+
+		
 
 		self.nodes.pop(maxI)
 
@@ -112,18 +115,18 @@ class Line :
 
 		mergedNode = self.nodes[minI] + self.nodes[minI + 1]
 
+		print("Merge:", self.nodes[minI].name, '-', self.nodes[minI + 1].name)
 		self.nodes.pop(minI)
 		self.nodes.pop(minI)
+
+		
 
 		self.nodes.insert(minI, mergedNode)
 
 
 	def balance(self) :
 
-		
-
-		
-		
+                
 		lastSD = self.standardDeviation()
 		currentSD = lastSD - 1
 
@@ -136,6 +139,12 @@ class Line :
 			
 			
 			currentSD = self.standardDeviation()
+
+			
+
+                
+
+                
 
 			
 
@@ -273,6 +282,24 @@ for i in range(5, 20) :
 	nodes.append(Node("PACKAGING 3", 139, None))
 	'''
 
+	
+	'''
+        #186782
+	nodes.append(Node("SWITCH AND LABELS", 38, True))
+	nodes.append(Node("TRACKS", 113, True))
+	nodes.append(Node("LOADING TROLLEYS", 49, False))
+	nodes.append(Node("BACK FOAM", 33, True))
+	nodes.append(Node("BACK COVER", 84, False))
+	nodes.append(Node("CUSHION FOAM", 36, True))
+	nodes.append(Node("CUSHION COVER", 57, False))
+	nodes.append(Node("LEFT ARM AND SEATBELT", 48, True))
+	nodes.append(Node("RIGHT ARM AND SEATBELT", 53, True))
+	nodes.append(Node("MANUAL TESTER", 36, False))
+	nodes.append(Node("PACKAGING A", 34, True))
+	nodes.append(Node("PACKAGING B", 17, True))
+	nodes.append(Node("PACKAGING C", 32, None))
+	'''
+
 	'''
 	#186755
 	nodes.append(Node("BELLOWS", 98, True))
@@ -294,21 +321,21 @@ for i in range(5, 20) :
 	nodes.append(Node("PACKAGING 3", 35, None))
 	'''
 
-	'''
+	
 	#186810
-	nodes.append(Node("LABEL/TRACKS", 95, False))
-	nodes.append(Node("LOAD/FRAME", 58, False))
+	nodes.append(Node("LABEL/TRACKS", 95, True))
+	nodes.append(Node("LOADING FRAMES", 58, True))
 	nodes.append(Node("BACK FOAM", 39, True))
 	nodes.append(Node("CUSHION FOAM", 43, False))
 	nodes.append(Node("BACK COVER", 186, True))
 	nodes.append(Node("CUSHION COVER", 100, False))
-	nodes.append(Node("LEFT ARM", 33, True))
-	nodes.append(Node("RIGHT ARM", 33, False))
-	nodes.append(Node("TESTER", 28, False))
+	nodes.append(Node("ARMS", 66, False))
+	nodes.append(Node("TESTER", 28, True))
 	nodes.append(Node("PACKAGING A", 69, True))
 	nodes.append(Node("PACKAGING B", 132, None))
-	'''
+	
 
+	'''
 	#187085
 	nodes.append(Node("BELLOWS", 86, True))
 	nodes.append(Node("TRACKS", 83, False))
@@ -326,7 +353,7 @@ for i in range(5, 20) :
 	nodes.append(Node("PACKAGING 1", 51, True))
 	nodes.append(Node("PACKAGING 2", 36, True))
 	nodes.append(Node("PACKAGING 3", 88, None))
-	
+	'''
 
 
 	line = Line(nodes, i)
@@ -339,7 +366,8 @@ for i in range(5, 20) :
 	line.smooth()
 
 	x.append(i)
-	y.append(line.seatsPerHour())
+
+	y.append(line.efficiency())
 
 	print(line, end = "")
 
