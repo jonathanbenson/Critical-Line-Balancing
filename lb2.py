@@ -159,6 +159,7 @@ class Line :
 
 		bestBlob = self.blobs[bestI]
 
+		print("Split:", ' '.join([n.name for n in bestBlob.nodes]))
 
 		self.blobs.pop(bestI)
 
@@ -179,6 +180,7 @@ class Line :
 
 				minI = i
 
+		print("Merge:", ' '.join([n.name for n in self.blobs[minI].nodes]), '-', ' '.join([n.name for n in self.blobs[minI + 1].nodes]))
 		mergedBlob = self.blobs[minI].merge(self.blobs[minI + 1])
 
 		
@@ -204,20 +206,22 @@ class Line :
 
 	def balance(self) :
 
-		'''
+		print(self.n)
+		
 		lastSD = self.standardDeviation()
 		currentSD = lastSD - 1
-		'''
 
+		while currentSD < lastSD :
 
-		for i in range(1000) :
-
+			
 			lastSD = self.standardDeviation()
 
 			self.merge()
 			self.split()
 
-			currendSD = self.standardDeviation()
+			currentSD = self.standardDeviation()
+
+			print(currentSD, lastSD)
 
 
 
@@ -273,13 +277,13 @@ for i in range(5, 20) :
 
 	#186810
 	blobs.append(Blob([Node("LABEL/TRACKS", 95, True)]))
-	blobs.append(Blob([Node("LOADING FRAMES", 58, True)]))
+	blobs.append(Blob([Node("LOADING FRAMES", 58, False)]))
 	blobs.append(Blob([Node("BACK FOAM", 39, True)]))
 	blobs.append(Blob([Node("CUSHION FOAM", 43, False)]))
 	blobs.append(Blob([Node("BACK COVER", 186, True)]))
 	blobs.append(Blob([Node("CUSHION COVER", 100, False)]))
-	blobs.append(Blob([Node("ARMS", 66, False)]))
-	blobs.append(Blob([Node("TESTER", 28, True)]))
+	blobs.append(Blob([Node("ARMS", 66, True)]))
+	blobs.append(Blob([Node("TESTER", 28, False)]))
 	blobs.append(Blob([Node("PACKAGING A", 69, True)]))
 	blobs.append(Blob([Node("PACKAGING B", 132, None)]))
 
