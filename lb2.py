@@ -221,7 +221,7 @@ class Line :
 
 			currentSD = self.standardDeviation()
 
-			print(currentSD, lastSD)
+			print(lastSD, currentSD)
 
 
 
