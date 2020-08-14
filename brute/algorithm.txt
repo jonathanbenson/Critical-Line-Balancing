@@ -1,0 +1,55 @@
+
+
+the time complexity for this algorithm would be N!/n! where N is the number of time study nodes and n is the desired number of operators on the line
+
+
+
+given a list timeStudyNodes of N times
+
+/*
+
+only one possible line during the first iteration
+then there will be N(N-1) possible lines during the second iteration
+then there will be N(N-1)(N-2) possible lines during the third iteration
+
+*/
+
+possibleLines = list()
+
+possibleLines.append(timeStudyNodes)
+
+
+for i = 0 to N - n
+
+	tempLines = list()
+
+
+
+	for each line in possibleLines
+
+		for j = 0 to lines.nodes.length() - 2
+
+			tempLine = line
+
+			tempLine.merge(j, j + 1)
+
+			tempLines.append(tempLine)
+
+
+	possibleLines = tempLines
+
+
+
+
+bestLine = lowestBottleneckLine(possibleLines)
+
+		
+
+
+
+		
+		
+
+
+
+
