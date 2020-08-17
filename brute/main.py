@@ -1,4 +1,5 @@
 
+import copy
 
 class Node :
 
@@ -36,6 +37,10 @@ class Line :
     def __init__(self, initialBlobs) :
 
         self.blobs = initialBlobs
+
+    def length(self) :
+
+        return len(self.blobs)
 
     def merge(self, i) :
 
@@ -117,11 +122,64 @@ reader.close()
 
 initialLine = Line([Blob(node) for node in tsNodes])
 
+
+
+
+while True :
+
+    try :
+
+        n = int(input("Enter the number of people (Max: {}".format(initialLine.length())))
+
+        if n > initialLine.length() or n <= 0 :
+
+            raise ValueError
+
+        break
+
+    except ValueError :
+
+        print("Error. Please enter a number less than the max and greater than 0")
+
+
+
+
 possibleLines = list()
 possibleLines.append(initialLine)
 
 
+for i in range(initialLine.length() - n) :
 
+    tempLines = list()
+
+
+    for line in possibleLines :
+
+
+        for j in range(line.length() - 2) :
+
+            tempLine = copy.deepcopy(line)
+
+            tempLine.merge(j)
+
+            tempLines.append(tempLine)
+
+    possibleLines = tempLines
+
+
+bestLine = possibleLines[0]
+count = 0
+
+for line in possibleLines :
+
+    if line.bottleneck() < bestLine.bottleneck() :
+
+        bestLine = line
+        count += 1
+
+        
+print(bestLine.bottleneck())
+print(count)
 
 
 

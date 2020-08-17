@@ -27,7 +27,7 @@ for i = 0 to N - n
 
 	for each line in possibleLines
 
-		for j = 0 to lines.nodes.length() - 2
+		for j = 0 to line.nodes.length() - 2
 
 			tempLine = line
 
